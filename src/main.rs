@@ -42,9 +42,8 @@ struct LocationAction {
 
 fn main() {
     let conn = Connection::open_in_memory().unwrap();
-    let thief_class = class::Class{ id: 0, name: "" };
-    let fighter_class = class::Class{ id: 0, name: "" };
-
+    let thief_class = user::Class{ id: 0, name: "" };
+    let fighter_class = user::Class{ id: 0, name: "" };
 
     /* prepare end */
 
@@ -65,4 +64,36 @@ fn main() {
 
     }
 
+}
+
+
+fn kick(auser : &user::User, aname : &str, buser : &user::User, bname : &str) {
+    let damage = auser.GetDamage();
+    buser.RecieveDamage(damage);
+    println!("{} damaged: {}", aname, damage);
+    //(attacker,defender);
+}
+
+fn battle(user : &user::User, mut bot : &user::User) {
+    let damage : i32;
+    while (true) {
+        kick(user, "you", bot,"enemy");
+        if (bot.GetHealth()<=0) {
+            println!("you win");
+            return;
+        }
+
+        /*
+        kick(&(bot, "enemy"), &(user,"you"));
+        if (bot.GetHealth()<=0) {
+            println!("you loose");
+            return;
+        }
+        */
+    }
+}
+
+fn walk() {
+    let bot  = user::User::CreateBot();
+    print!("you have walked down the steer and meet {}! Fight him: " , bot.ToString());
 }
