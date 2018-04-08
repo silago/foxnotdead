@@ -49,7 +49,7 @@ impl User
 
 
     // further mb add dodge chance
-    pub fn GetDamage(mut self) -> i32 {
+    pub fn GetDamage(&self) -> i32 {
         //let rng = rand::thread_rng();
         //let x = rng.get_range(self.minDamage, self.maxDamage);
 
@@ -59,11 +59,11 @@ impl User
 
 
     // further mb add dodge chance
-    pub fn RecieveDamage(self, x : i32) {
+    pub fn RecieveDamage(&mut self, x : i32) {
         self.health-=x;
     }
 
-    pub fn GetHealth(self)->i32  {return self.health;}
+    pub fn GetHealth(&self)->i32  {return self.health;}
 
     pub fn IsAlive(self) -> bool {
         return self.health>0;

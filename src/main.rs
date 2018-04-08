@@ -48,48 +48,57 @@ fn main() {
     /* prepare end */
 
 
-    let mut u = user::User::new(
+    let mut u : user::User = user::User::new(
             input::getInput("Enter tour name").trim()
     );
     let class_input = input::getInput("Choose your class:");
 
 
+    let mut bot : user::User = user::User::CreateBot();
+    //let u2 = &mut &u;
+    //let b2 = &mut &bot;
+    //if (class_input == "1") {
+    //    u.SetClass(thief_class);
+    //}
 
-    if (class_input == "1") {
-        u.SetClass(thief_class);
-    }
+    //if (class_input == "2") {
+    //    u.SetClass(fighter_class);
+    //}
 
-    if (class_input == "2") {
-        u.SetClass(fighter_class);
 
-    }
+
+
+    battle(&mut u, &mut bot);
 
 }
 
 
-fn kick(auser : &user::User, aname : &str, buser : &user::User, bname : &str) {
+fn kick(auser : &user::User, aname : &str, buser: &mut user::User, bname : &str) {
     let damage = auser.GetDamage();
     buser.RecieveDamage(damage);
-    println!("{} damaged: {}", aname, damage);
+
+    println!("{} damaged: {}, {} health left: {}", aname, damage,bname, buser.GetHealth());
     //(attacker,defender);
 }
 
-fn battle(user : &user::User, mut bot : &user::User) {
+fn battle(user : &mut user::User, bot : &mut user::User) {
     let damage : i32;
     while (true) {
-        kick(user, "you", bot,"enemy");
+        kick(user, "you", bot, "enemy");
         if (bot.GetHealth()<=0) {
             println!("you win");
             return;
         }
 
-        /*
-        kick(&(bot, "enemy"), &(user,"you"));
-        if (bot.GetHealth()<=0) {
-            println!("you loose");
+
+        kick(bot, "enemy", user,"you");
+
+        if (user.GetHealth()<=0) {
+            println!("you win");
             return;
         }
-        */
+
+        input::getInput("").trim();
     }
 }
 
