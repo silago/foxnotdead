@@ -2,7 +2,21 @@ pub mod input;
 pub mod user;
 pub mod class;
 
+pub mod tg;
+
 extern crate rusqlite;
+
+extern crate telegram_bot;
+extern crate futures;
+extern crate tokio_core;
+
+use std::env;
+
+use futures::Stream;
+use tokio_core::reactor::Core;
+use telegram_bot::*;
+
+
 
 
 
@@ -47,6 +61,9 @@ struct LocationAction {
 
 
 fn main() {
+
+
+
     let conn = Connection::open_in_memory().unwrap();
     let thief_class = user::Class{ id: 0, name: "" };
     let fighter_class = user::Class{ id: 0, name: "" };
@@ -75,7 +92,8 @@ fn main() {
 
 
 
-    gameLoop(&mut u);
+    tgLoop(&mut u);
+    //gameLoop(&mut u);
     // game loop
 
 }
@@ -130,12 +148,62 @@ fn walk(user : &mut user::User) {
 
 
 fn gameLoop(user : &mut user::User) {
-    while (true) {
         let mut i  = input::getInput("Enter action");//.trim();
         println!("{}",i);
         if (i.trim()=="w") {
             println!(">>");
             self::walk(user);
         }
-    }
+}
+
+
+
+fn tgLoop(user : &mut user::User) {
+    let mut core = Core::new().unwrap();
+
+    let token = "590889402:AAG-OPeK9bJAPdNU_9h_WXYs7e8eLfZBy7E";
+    //let token = env::var("590889402:AAG-OPeK9bJAPdNU_9h_WXYs7e8eLfZBy7E").unwrap();
+    let api = Api::configure(token).build(core.handle()).unwrap();
+
+    /*
+    let printCallback : fn() = |msg : SendMessage|{
+        api.spawn(
+            msg
+        );
+    };
+    */
+
+    // Fetch new updates via long poll method
+    let future = api.stream().for_each(|update| {
+
+        // If the received update contains a new message...
+        if let UpdateKind::Message(message) = update.kind {
+
+            if let MessageKind::Text {ref data, ..} = message.kind {
+                let result = String::new();
+                if (data.trim()=="w") {
+                }
+
+                api.spawn( message.text_reply(format!("Nothing happens")));
+
+
+
+                // Print received text message to stdout.
+                println!("<{}>: {}", &message.from.first_name, data);
+
+                //printCallback( message.text_reply(format!(" {}: You just wrote '{}'", pre, after)));
+
+                // Answer message with "Hi".
+                /*
+                api.spawn(message.text_reply(
+                    format!("Hi, {}! You just wrote '{}'", &message.from.first_name, data)
+                ));
+                */
+            }
+        }
+
+        Ok(())
+    });
+
+    core.run(future).unwrap();
 }

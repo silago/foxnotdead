@@ -6,3 +6,6 @@ authors = ["silago <silago.nevermind@gmail.com>"]
 [dependencies]
 rusqlite = "0.13.0"
 rand = "0.4.2"
+telegram-bot = "0.6"
+tokio-core = "0.1"
+futures = "0.1.17"

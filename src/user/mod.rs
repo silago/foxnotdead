@@ -38,6 +38,10 @@ impl User
         }
     }
 
+    pub fn GetInfo(&self) {
+
+    }
+
     pub fn SetClass(&mut self, class : Class)
     {
         self.class = class;
