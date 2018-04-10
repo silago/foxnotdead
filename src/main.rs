@@ -5,6 +5,12 @@ pub mod class;
 extern crate rusqlite;
 
 
+
+extern crate rand;
+//use self::rand::Rng;
+use self::rand::Rng;
+
+
 use std::io;
 use rusqlite::Connection;
 
@@ -54,7 +60,6 @@ fn main() {
     let class_input = input::getInput("Choose your class:");
 
 
-    let mut bot : user::User = user::User::CreateBot();
     //let u2 = &mut &u;
     //let b2 = &mut &bot;
     //if (class_input == "1") {
@@ -68,7 +73,10 @@ fn main() {
 
 
 
-    battle(&mut u, &mut bot);
+
+
+    gameLoop(&mut u);
+    // game loop
 
 }
 
@@ -81,17 +89,23 @@ fn kick(auser : &user::User, aname : &str, buser: &mut user::User, bname : &str)
     //(attacker,defender);
 }
 
-fn battle(user : &mut user::User, bot : &mut user::User) {
+fn battle(user : &mut user::User) {
+
+    let mut bot  = user::User::CreateBot();
+    print!("you have walked down the steer and meet {}! Fight him: " , &bot.Getname());
+
+    //battle(&mut u, &mut bot);
+
     let damage : i32;
     while (true) {
-        kick(user, "you", bot, "enemy");
+        kick(user, "you",&mut bot,"en");
         if (bot.GetHealth()<=0) {
             println!("you win");
             return;
         }
 
 
-        kick(bot, "enemy", user,"you");
+        kick(&mut bot, "enemy", user,"you");
 
         if (user.GetHealth()<=0) {
             println!("you win");
@@ -102,7 +116,26 @@ fn battle(user : &mut user::User, bot : &mut user::User) {
     }
 }
 
-fn walk() {
-    let bot  = user::User::CreateBot();
-    print!("you have walked down the steer and meet {}! Fight him: " , bot.ToString());
+
+fn walk(user : &mut user::User) {
+    let r = rand::thread_rng().gen_range(0,3);
+    if (r == 0 ) {
+        battle(user);
+    } else {
+        print!("Nothing happens.. ");
+    }
+
+    //battle(&mut u, &mut bot);
+}
+
+
+fn gameLoop(user : &mut user::User) {
+    while (true) {
+        let mut i  = input::getInput("Enter action");//.trim();
+        println!("{}",i);
+        if (i.trim()=="w") {
+            println!(">>");
+            self::walk(user);
+        }
+    }
 }

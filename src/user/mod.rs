@@ -43,8 +43,12 @@ impl User
         self.class = class;
     }
 
+    pub fn Getname(&self) -> &String {
+        &self.name
+    }
+
     pub fn ToString(self) -> String {
-        return self.name;
+        self.name
     }
 
 
